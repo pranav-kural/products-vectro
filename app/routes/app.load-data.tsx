@@ -1,5 +1,4 @@
 import {
-  Box,
   Card,
   Layout,
   Link,
@@ -25,6 +24,15 @@ export default function LoadDataPage() {
         <Layout.Section>
           <Card>
             <BlockStack gap="300">
+              <Text variant="headingXl" as="h4">
+                Setup Vector Store
+              </Text>
+              <Text as="p" variant="bodyMd">
+                Below you can configure the vector store where you want to load
+                the products data. Select the vector store provider, and provide
+                the URL of the hosted vector store index/collection you want to
+                use, and the required credentials to access it.
+              </Text>
               <VectorStoreCredentialsForm
                 setVectorStoreCredentials={setVectorStoreCredentials}
               />
@@ -35,26 +43,6 @@ export default function LoadDataPage() {
                   {JSON.stringify(vectorStoreCredentials)}
                 </Text>
               )}
-
-              <Text as="p" variant="bodyMd">
-                The app template comes with an additional page which
-                demonstrates how to create multiple pages within app navigation
-                using{" "}
-                <Link
-                  url="https://shopify.dev/docs/apps/tools/app-bridge"
-                  target="_blank"
-                  removeUnderline
-                >
-                  App Bridge
-                </Link>
-                .
-              </Text>
-              <Text as="p" variant="bodyMd">
-                To create your own page and have it show up in the app
-                navigation, add a page inside <Code>app/routes</Code>, and a
-                link to it in the <Code>&lt;NavMenu&gt;</Code> component found
-                in <Code>app/routes/app.jsx</Code>.
-              </Text>
             </BlockStack>
           </Card>
         </Layout.Section>
@@ -62,16 +50,25 @@ export default function LoadDataPage() {
           <Card>
             <BlockStack gap="200">
               <Text as="h2" variant="headingMd">
-                Resources
+                Recommended Vector Store Providers
               </Text>
               <List>
                 <List.Item>
                   <Link
-                    url="https://shopify.dev/docs/apps/design-guidelines/navigation#app-nav"
+                    url="https://zilliz.com/"
                     target="_blank"
                     removeUnderline
                   >
-                    App nav best practices
+                    Zilliz Milvus
+                  </Link>
+                </List.Item>
+                <List.Item>
+                  <Link
+                    url="https://www.pinecone.io/"
+                    target="_blank"
+                    removeUnderline
+                  >
+                    Pinecone
                   </Link>
                 </List.Item>
               </List>
@@ -80,22 +77,5 @@ export default function LoadDataPage() {
         </Layout.Section>
       </Layout>
     </Page>
-  );
-}
-
-function Code({ children }: { children: React.ReactNode }) {
-  return (
-    <Box
-      as="span"
-      padding="025"
-      paddingInlineStart="100"
-      paddingInlineEnd="100"
-      background="bg-surface-active"
-      borderWidth="025"
-      borderColor="border"
-      borderRadius="100"
-    >
-      <code>{children}</code>
-    </Box>
   );
 }
