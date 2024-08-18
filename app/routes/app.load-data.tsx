@@ -9,8 +9,15 @@ import {
   BlockStack,
 } from "@shopify/polaris";
 import { TitleBar } from "@shopify/app-bridge-react";
+import { VectorStoreCredentialsForm } from "~/components/vector-store-credentials-form";
+import { useState } from "react";
+import type { VectorStoreCredentials } from "~/types/vector-store";
 
 export default function LoadDataPage() {
+  const [vectorStoreCredentials, setVectorStoreCredentials] = useState<
+    VectorStoreCredentials | undefined
+  >();
+
   return (
     <Page>
       <TitleBar title="Load Data page" />
@@ -18,6 +25,17 @@ export default function LoadDataPage() {
         <Layout.Section>
           <Card>
             <BlockStack gap="300">
+              <VectorStoreCredentialsForm
+                setVectorStoreCredentials={setVectorStoreCredentials}
+              />
+
+              {vectorStoreCredentials && (
+                <Text as="p" variant="bodyMd">
+                  Credentials submitted:{" "}
+                  {JSON.stringify(vectorStoreCredentials)}
+                </Text>
+              )}
+
               <Text as="p" variant="bodyMd">
                 The app template comes with an additional page which
                 demonstrates how to create multiple pages within app navigation
