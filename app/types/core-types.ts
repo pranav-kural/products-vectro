@@ -9,7 +9,9 @@ export enum GoogleEmbeddingModelName {
 }
 
 export enum OpenAIEmbeddingModelName {
-  textEmbedding003 = "text-embedding-003",
+  textEmbeddingAda002 = "text-embedding-ada-002",
+  textEmbedding3Small = "text-embedding-3-small",
+  textEmbedding3Large = "text-embedding-3-large",
 }
 
 export enum HuggingFaceEmbeddingModelName {
@@ -27,6 +29,12 @@ export type EmbeddingModelName =
   | GoogleEmbeddingModelName
   | OpenAIEmbeddingModelName
   | HuggingFaceEmbeddingModelName;
+
+export const EmbeddingModelNamesList = [
+  ...Object.values(GoogleEmbeddingModelName),
+  ...Object.values(OpenAIEmbeddingModelName),
+  ...Object.values(HuggingFaceEmbeddingModelName),
+];
 
 export type EmbeddingModelConfig = {
   provider: EmbeddingModelProvider;

@@ -1,23 +1,22 @@
 import { Form, FormLayout, TextField, Button, Select } from "@shopify/polaris";
 import { useCallback, useState } from "react";
 import {
-  type VectorStoreCredentials,
+  type VectorStoreConfig,
   VectorStoreProvider,
-} from "~/types/vector-store";
+} from "~/types/core-types";
 
 export type VectorStoreCredentialsFormProps = {
-  setVectorStoreCredentials: (credentials: VectorStoreCredentials) => void;
-  initialProvider?: VectorStoreProvider;
-  initialURL?: string;
-  initialApiKey?: string;
+  setVectorStoreConfig: (config: VectorStoreConfig) => void;
+  initialVectorStoreConfig?: VectorStoreConfig;
 };
 
 export function VectorStoreCredentialsForm(
   props: VectorStoreCredentialsFormProps,
 ) {
-  const INITIAL_PROVIDER = props.initialProvider || undefined;
-  const INITIAL_URL = props.initialURL || "";
-  const INITIAL_API_KEY = props.initialApiKey || "";
+  const INITIAL_PROVIDER =
+    props.initialVectorStoreConfig?.provider || undefined;
+  const INITIAL_URL = props.initialVectorStoreConfig?.url || "";
+  const INITIAL_API_KEY = props.initialVectorStoreConfig?.apiKey || "";
 
   const [provider, setProvider] = useState<VectorStoreProvider | undefined>(
     INITIAL_PROVIDER,
@@ -54,7 +53,8 @@ export function VectorStoreCredentialsForm(
       setApiKeyError("");
     }
 
-    props.setVectorStoreCredentials({
+    props.setVectorStoreConfig({
+      provider,
       url,
       apiKey,
     });
