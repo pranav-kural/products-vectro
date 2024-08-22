@@ -1,5 +1,6 @@
 {
-  "name": "products-vector-store",
+  "name": "products-vectro",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "build": "remix vite:build",
@@ -73,5 +74,5 @@
   "overrides": {
     "undici": "6.13.0"
   },
-  "author": "pranavkural"
+  "author": "Pranav Kural"
 }
