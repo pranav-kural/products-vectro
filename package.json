@@ -39,6 +39,7 @@
     "@shopify/polaris": "^12.0.0",
     "@shopify/shopify-app-remix": "^3.0.2",
     "@shopify/shopify-app-session-storage-prisma": "^5.0.2",
+    "@elastic/elasticsearch": "^8.15.0",
     "@zilliz/milvus2-sdk-node": "^2.4.5",
     "isbot": "^5.1.0",
     "langchain": "^0.2.16",

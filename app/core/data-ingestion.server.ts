@@ -19,6 +19,11 @@ import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { PineconeStore } from "@langchain/pinecone";
 import { Pinecone as PineconeClient } from "@pinecone-database/pinecone";
+import {
+  ElasticVectorSearch,
+  type ElasticClientArgs,
+} from "@langchain/community/vectorstores/elasticsearch";
+import { Client, type ClientOptions } from "@elastic/elasticsearch";
 import { JSONLoader } from "langchain/document_loaders/fs/json";
 import type { Document } from "langchain/document";
 import {
@@ -57,13 +62,13 @@ function getEmbeddingModel(
 }
 
 /**
- * Retrieves the vector store instance based on the provided configuration.
+ * Ingests the documents to Pinecone.
  *
  * @param {VectorStoreConfig} vectorStoreConfig - The configuration for the vector store.
- * @returns {any} - The vector store instance.
- * @throws {Error} - If the vector store provider is invalid.
+ * @param {OpenAIEmbeddings | GoogleGenerativeAIEmbeddings} embeddingModel - The embedding model instance.
+ * @param {Document[]} products - The products data.
  */
-async function ingestDocumentsToVectorStore(
+async function ingestDocumentsToPinecone(
   vectorStoreConfig: VectorStoreConfig,
   embeddingModel: OpenAIEmbeddings | GoogleGenerativeAIEmbeddings,
   products: Document[],
@@ -79,7 +84,26 @@ async function ingestDocumentsToVectorStore(
     await PineconeStore.fromDocuments(products, embeddingModel, {
       pineconeIndex,
     });
-  } else if (vectorStoreConfig.provider === "Astra") {
+  } else {
+    throw new Error(
+      "Failed to load documents to Pinecone as the provided vector store provider is invalid",
+    );
+  }
+}
+
+/**
+ * Ingests the documents to AstraDB.
+ *
+ * @param {VectorStoreConfig} vectorStoreConfig - The configuration for the vector store.
+ * @param {OpenAIEmbeddings | GoogleGenerativeAIEmbeddings} embeddingModel - The embedding model instance.
+ * @param {Document[]} products - The products data.
+ */
+async function ingestDocumentsToAstraDB(
+  vectorStoreConfig: VectorStoreConfig,
+  embeddingModel: OpenAIEmbeddings | GoogleGenerativeAIEmbeddings,
+  products: Document[],
+): Promise<void> {
+  if (vectorStoreConfig.provider === "Astra") {
     // Astra configurations
     const astraConfig: AstraLibArgs = {
       token: vectorStoreConfig.token,
@@ -88,12 +112,72 @@ async function ingestDocumentsToVectorStore(
       collectionOptions: {
         vector: {
           dimension: vectorStoreConfig.dimensions,
-          metric: vectorStoreConfig.metric,
+          metric: vectorStoreConfig.similarityMetric,
         },
       },
     };
     // load documents
-    AstraDBVectorStore.fromDocuments(products, embeddingModel, astraConfig);
+    await AstraDBVectorStore.fromDocuments(
+      products,
+      embeddingModel,
+      astraConfig,
+    );
+  } else {
+    throw new Error(
+      "Failed to load documents to Astra as the provided vector store provider is invalid",
+    );
+  }
+}
+
+async function ingestDocumentsToElasticsearch(
+  vectorStoreConfig: VectorStoreConfig,
+  embeddingModel: OpenAIEmbeddings | GoogleGenerativeAIEmbeddings,
+  products: Document[],
+): Promise<void> {
+  if (vectorStoreConfig.provider === "Elasticsearch") {
+    // Elasticsearch client configurations
+    const clientOptions: ClientOptions = {
+      node: vectorStoreConfig.url,
+      auth: {
+        apiKey: vectorStoreConfig.apiKey,
+      },
+    };
+    // Setup Elasticsearch client
+    const clientArgs: ElasticClientArgs = {
+      client: new Client(clientOptions),
+      indexName: vectorStoreConfig.indexName,
+      vectorSearchOptions: {
+        engine: vectorStoreConfig.engine,
+        similarity: vectorStoreConfig.similarityMetric,
+      },
+    };
+    // load documents
+    await ElasticVectorSearch.fromDocuments(
+      products,
+      embeddingModel,
+      clientArgs,
+    );
+  }
+}
+
+/**
+ * Retrieves the vector store instance based on the provided configuration.
+ *
+ * @param {VectorStoreConfig} vectorStoreConfig - The configuration for the vector store.
+ * @returns {any} - The vector store instance.
+ * @throws {Error} - If the vector store provider is invalid.
+ */
+async function ingestDocumentsToVectorStore(
+  vectorStoreConfig: VectorStoreConfig,
+  embeddingModel: OpenAIEmbeddings | GoogleGenerativeAIEmbeddings,
+  products: Document[],
+): Promise<void> {
+  if (vectorStoreConfig.provider === "Pinecone") {
+    ingestDocumentsToPinecone(vectorStoreConfig, embeddingModel, products);
+  } else if (vectorStoreConfig.provider === "Astra") {
+    ingestDocumentsToAstraDB(vectorStoreConfig, embeddingModel, products);
+  } else if (vectorStoreConfig.provider === "Elasticsearch") {
+    ingestDocumentsToElasticsearch(vectorStoreConfig, embeddingModel, products);
   } else {
     throw new Error("Invalid vector store provider");
   }

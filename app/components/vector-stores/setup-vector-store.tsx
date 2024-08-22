@@ -1,5 +1,5 @@
 import { Card, Layout, Link, List, Text, BlockStack } from "@shopify/polaris";
-import { VectorStoreCredentialsForm } from "./vector-store-credentials-form";
+import { VectorStoreCredentialsForm } from "./vector-store-setup-form";
 import type { VectorStoreConfig } from "~/types/core-types";
 
 export type SetupVectorStoreProps = {

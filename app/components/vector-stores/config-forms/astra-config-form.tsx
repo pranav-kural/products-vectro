@@ -112,7 +112,7 @@ export function AstraConfigForm(props: AstraConfigFormProps) {
       endpoint: endpoint,
       collection: collection,
       dimensions: parseInt(dimensions),
-      metric: metric as "cosine" | "euclidean" | "dot_product",
+      similarityMetric: metric as "cosine" | "euclidean" | "dot_product",
     });
   }, [PROVIDER, token, endpoint, collection, dimensions, metric, props]);
 

@@ -46,6 +46,7 @@ export type EmbeddingModelConfig = {
 export enum VectorStoreProvider {
   Astra = "Astra",
   Pinecone = "Pinecone",
+  Elasticsearch = "Elasticsearch",
 }
 
 export type PineconeConfig = {
@@ -54,13 +55,34 @@ export type PineconeConfig = {
   indexName: string;
 };
 
+export const AstraDBMetricOptions = ["cosine", "euclidean", "dot_product"];
+export type AstraDBMetric = "cosine" | "euclidean" | "dot_product";
+
 export type AstraConfig = {
   provider: "Astra";
   token: string;
   endpoint: string;
   collection: string;
   dimensions?: number;
-  metric?: "cosine" | "euclidean" | "dot_product";
+  similarityMetric?: AstraDBMetric;
 };
 
-export type VectorStoreConfig = PineconeConfig | AstraConfig;
+export const ElasticSimilarityOptions = ["l2_norm", "dot_product", "cosine"];
+export type ElasticSimilarity = "l2_norm" | "dot_product" | "cosine";
+
+export const ElasticKnnEngineOptions = ["hnsw"];
+export type ElasticKnnEngine = "hnsw";
+
+export type ElasticsearchConfig = {
+  provider: "Elasticsearch";
+  url: string;
+  indexName: string;
+  apiKey: string;
+  engine?: ElasticKnnEngine;
+  similarityMetric?: ElasticSimilarity;
+};
+
+export type VectorStoreConfig =
+  | PineconeConfig
+  | AstraConfig
+  | ElasticsearchConfig;
