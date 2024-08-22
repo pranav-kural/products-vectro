@@ -1,12 +1,28 @@
-# Shopify App Template - Remix
+# Products Vectro
 
-This is a template for building a [Shopify app](https://shopify.dev/docs/apps/getting-started) using the [Remix](https://remix.run) framework.
+An open-source project providing template of a Shopify app that enables merchants to load products data into a vector database.
 
-Rather than cloning this repo, you can use your preferred package manager and the Shopify CLI with [these steps](https://shopify.dev/docs/apps/getting-started/create).
+- Handles full data ingestion pipeline: collecting data from GraphQL Admin API, preprocessing data, embeddings generation, and storage in vector store.
+- Allows merchant to choose between multiple vector storage providers (Milvus, Pinecone) and embedding models providers (OpenAI, Google).
 
-Visit the [`shopify.dev` documentation](https://shopify.dev/docs/api/shopify-app-remix) for more details on the Remix app package.
+## How it works?
+
+You can simply clone this project and create your own Shopify app to load products data into a vector database. The app will provide the required user interface in the Shopify Admin UI to configure the data ingestion pipeline, and will handle the data ingestion process in the background.
+
+Basic data ingestion workflow is as follows:
+
+1. **Vector store configuration**: Merchant configures the vector store provider (Milvus, Pinecone) and provides the required credentials.
+2. **Embedding model configuration**: Merchant configures the embedding model provider (OpenAI, Google) and provides the required credentials.
+3. **Data Configuration**: Merchant can specify custom configurations for loading products data, for example, the number of products to load, the fields to include, products to exclude, etc.
+4. **Data Ingestion**: The app will start the data ingestion process in the background. It will collect products data from the Shopify Admin API, pre-process the data, generate embeddings using the specified model, and store the embeddings in the vector store.
 
 ## Quick start
+
+Begin by cloning the repository and installing the dependencies.
+
+```bash
+git clone
+```
 
 ### Prerequisites
 
@@ -18,7 +34,7 @@ Before you begin, you'll need the following:
 
 ### Setup
 
-If you used the CLI to create the template, you can skip this section.
+Use below commands to install the dependencies.
 
 Using yarn:
 
@@ -62,47 +78,13 @@ Press P to open the URL to your app. Once you click install, you can start devel
 
 Local development is powered by [the Shopify CLI](https://shopify.dev/docs/apps/tools/cli). It logs into your partners account, connects to an app, provides environment variables, updates remote config, creates a tunnel and provides commands to generate extensions.
 
-### Authenticating and querying data
-
-To authenticate and query data you can use the `shopify` const that is exported from `/app/shopify.server.js`:
-
-```js
-export async function loader({ request }) {
-  const { admin } = await shopify.authenticate.admin(request);
-
-  const response = await admin.graphql(`
-    {
-      products(first: 25) {
-        nodes {
-          title
-          description
-        }
-      }
-    }`);
-
-  const {
-    data: {
-      products: { nodes },
-    },
-  } = await response.json();
-
-  return json(nodes);
-}
-```
-
-This template comes preconfigured with examples of:
-
-1. Setting up your Shopify app in [/app/shopify.server.ts](https://github.com/Shopify/shopify-app-template-remix/blob/main/app/shopify.server.ts)
-2. Querying data using Graphql. Please see: [/app/routes/app.\_index.tsx](https://github.com/Shopify/shopify-app-template-remix/blob/main/app/routes/app._index.tsx).
-3. Responding to mandatory webhooks in [/app/routes/webhooks.tsx](https://github.com/Shopify/shopify-app-template-remix/blob/main/app/routes/webhooks.tsx)
-
 Please read the [documentation for @shopify/shopify-app-remix](https://www.npmjs.com/package/@shopify/shopify-app-remix#authenticating-admin-requests) to understand what other API's are available.
 
 ## Deployment
 
 ### Application Storage
 
-This template uses [Prisma](https://www.prisma.io/) to store session data, by default using an [SQLite](https://www.sqlite.org/index.html) database.
+This project uses [Prisma](https://www.prisma.io/) to store session data, by default using an [SQLite](https://www.sqlite.org/index.html) database.
 The database is defined as a Prisma schema in `prisma/schema.prisma`.
 
 This use of SQLite works in production if your app runs as a single instance.
@@ -143,7 +125,7 @@ pnpm run build
 
 ## Hosting
 
-When you're ready to set up your app in production, you can follow [our deployment documentation](https://shopify.dev/docs/apps/deployment/web) to host your app on a cloud provider like [Heroku](https://www.heroku.com/) or [Fly.io](https://fly.io/).
+When you're ready to set up the app in production, you can follow [our deployment documentation](https://shopify.dev/docs/apps/deployment/web) to host the app on a cloud provider like [Heroku](https://www.heroku.com/) or [Fly.io](https://fly.io/).
 
 When you reach the step for [setting up environment variables](https://shopify.dev/docs/apps/deployment/web#set-env-vars), you also need to set the variable `NODE_ENV=production`.
 
@@ -314,21 +296,18 @@ See the [Prisma documentation](https://www.prisma.io/docs/getting-started/setup-
 
 ### I want to use Polaris v13.0.0 or higher
 
-Currently, this template is set up to work on node v18.20 or higher. However, `@shopify/polaris` is limited to v12 because v13 can only run on node v20+.
+Currently, this project is set up to work on node v18.20 or higher. However, `@shopify/polaris` is limited to v12 because v13 can only run on node v20+.
 
 You don't have to make any changes to the code in order to be able to upgrade Polaris to v13, but you'll need to do the following:
 
 - Upgrade your node version to v20.10 or higher.
 - Update your `Dockerfile` to pull `FROM node:20-alpine` instead of `node:18-alpine`
 
-## Benefits
+## Shopify App Template - Remix
 
-Shopify apps are built on a variety of Shopify tools to create a great merchant experience.
+This project was scaffolded using the [Shopify App Template - Remix](https://github.com/Shopify/shopify-app-template-remix). The template is a starting point for building Shopify apps using the [Remix](https://remix.run) framework.
 
-<!-- TODO: Uncomment this after we've updated the docs -->
-<!-- The [create an app](https://shopify.dev/docs/apps/getting-started/create) tutorial in our developer documentation will guide you through creating a Shopify app using this template. -->
-
-The Remix app template comes with the following out-of-the-box functionality:
+This template comes with the following out-of-the-box functionality:
 
 - [OAuth](https://github.com/Shopify/shopify-app-js/tree/main/packages/shopify-app-remix#authenticating-admin-requests): Installing the app and granting permissions
 - [GraphQL Admin API](https://github.com/Shopify/shopify-app-js/tree/main/packages/shopify-app-remix#using-the-shopify-admin-graphql-api): Querying or mutating Shopify admin data
@@ -339,7 +318,7 @@ The Remix app template comes with the following out-of-the-box functionality:
 
 ## Tech Stack
 
-This template uses [Remix](https://remix.run). The following Shopify tools are also included to ease app development:
+This project uses [Remix](https://remix.run). The following Shopify tools are also included to ease app development:
 
 - [Shopify App Remix](https://shopify.dev/docs/api/shopify-app-remix) provides authentication and methods for interacting with Shopify APIs.
 - [Shopify App Bridge](https://shopify.dev/docs/apps/tools/app-bridge) allows your app to seamlessly integrate your app within Shopify's Admin.
