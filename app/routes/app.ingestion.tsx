@@ -16,9 +16,6 @@ export const action = getProductsAction;
 
 export default function Index() {
   const fetcher = useFetcher<typeof action>();
-  // const isLoading =
-  //   ["loading", "submitting"].includes(fetcher.state) &&
-  //   fetcher.formMethod === "POST";
 
   const loadProducts = () => fetcher.submit({}, { method: "POST" });
 

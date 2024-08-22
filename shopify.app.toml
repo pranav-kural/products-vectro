@@ -1,9 +1,9 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "8b63283b1e0b7d64b7f90b2c3c324028"
-name = "products-vector-store"
-handle = "products-vector-store"
-application_url = "https://collectibles-aluminium-madness-weird.trycloudflare.com"
+name = "products-vectro"
+handle = "products-vectro"
+application_url = "https://handmade-trivia-ontario-ciao.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "read_product_listings,read_products"
 
 [auth]
 redirect_urls = [
-  "https://collectibles-aluminium-madness-weird.trycloudflare.com/auth/callback",
-  "https://collectibles-aluminium-madness-weird.trycloudflare.com/auth/shopify/callback",
-  "https://collectibles-aluminium-madness-weird.trycloudflare.com/api/auth/callback"
+  "https://handmade-trivia-ontario-ciao.trycloudflare.com/auth/callback",
+  "https://handmade-trivia-ontario-ciao.trycloudflare.com/auth/shopify/callback",
+  "https://handmade-trivia-ontario-ciao.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
