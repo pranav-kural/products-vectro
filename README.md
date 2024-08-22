@@ -2,8 +2,29 @@
 
 An open-source project providing template of a Shopify app that enables merchants to load products data into a vector database.
 
-- Handles full data ingestion pipeline: collecting data from GraphQL Admin API, preprocessing data, embeddings generation, and storage in vector store.
-- Allows merchant to choose between multiple vector storage providers (Milvus, Pinecone) and embedding models providers (OpenAI, Google).
+## Features
+
+- **Full Data Ingestion Cycle:** Handles full data ingestion pipeline from collecting data from GraphQL Admin API, pre-processing data, and generating embeddings to storing embedding vectors in vector database.
+- **Vector Store Providers:** Supports multiple vector store providers like Pinecone, Datastax (AstraDB), and Elastic (Elasticsearch) out of the box, giving you the flexibility to choose the best provider for your use case.
+- **Embedding Model Providers:** Supports multiple state-of-the-art embedding model providers like OpenAI, Google Generative AI, and Hugging Face out of the box, giving you the flexibility to choose the best provider for your use case.
+
+### Supported Vector Store Providers
+
+<img src="https://github.com/user-attachments/assets/1577a89d-d336-4f7d-945a-e402e124536e" width="220" height="50" alt="Elasticsearch"/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://github.com/user-attachments/assets/8e07af17-5d9e-4349-8bcc-8c6c68f4848a" width="200" height="50" alt="Pinecone"/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://github.com/user-attachments/assets/2532751a-8623-480a-87a5-34feb4b2b562" width="200" height="35" alt="Datastax"/>
+
+### Supported Embedding Model Providers
+
+<img src="https://github.com/user-attachments/assets/6f083f52-5dab-4c2b-a5d1-0e2566b20acb" width="200" height="50" alt="OpenAI"/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src="https://github.com/user-attachments/assets/23a50f34-f34e-4f28-9886-06c80a01032b" width="150" height="50" alt="Google Gemini API"/>
+
+### Screenshot of Interface
+
+![Screenshot of interface](https://github.com/user-attachments/assets/83d01215-cd2b-489c-bab5-5e66f3230f98)
 
 ## How it works?
 
@@ -11,8 +32,8 @@ You can simply clone this project and create your own Shopify app to load produc
 
 Basic data ingestion workflow is as follows:
 
-1. **Vector store configuration**: Merchant configures the vector store provider (Milvus, Pinecone) and provides the required credentials.
-2. **Embedding model configuration**: Merchant configures the embedding model provider (OpenAI, Google) and provides the required credentials.
+1. **Vector store configuration**: Merchant configures the vector store provider and provides the required credentials.
+2. **Embedding model configuration**: Merchant configures the embedding model provider and provides the required credentials.
 3. **Data Configuration**: Merchant can specify custom configurations for loading products data, for example, the number of products to load, the fields to include, products to exclude, etc.
 4. **Data Ingestion**: The app will start the data ingestion process in the background. It will collect products data from the Shopify Admin API, pre-process the data, generate embeddings using the specified model, and store the embeddings in the vector store.
 
@@ -336,3 +357,7 @@ This project uses [Remix](https://remix.run). The following Shopify tools are al
 - [App extensions](https://shopify.dev/docs/apps/app-extensions/list)
 - [Shopify Functions](https://shopify.dev/docs/api/functions)
 - [Getting started with internationalizing your app](https://shopify.dev/docs/apps/best-practices/internationalization/getting-started)
+
+## Trademark Disclaimer
+
+All product names, logos, and brands are property of their respective owners. All company, product, and service names used in this project are for identification purposes only. Use of these names, logos, and brands does not imply endorsement.

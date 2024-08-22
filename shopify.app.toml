@@ -3,7 +3,7 @@
 client_id = "b7f687ee0404bc981fcf0f636224b59e"
 name = "products-vectro"
 handle = "products-vectro-1"
-application_url = "https://vegetables-knives-locally-include.trycloudflare.com"
+application_url = "https://colleges-jurisdiction-subscribers-than.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "read_product_listings,read_products"
 
 [auth]
 redirect_urls = [
-  "https://vegetables-knives-locally-include.trycloudflare.com/auth/callback",
-  "https://vegetables-knives-locally-include.trycloudflare.com/auth/shopify/callback",
-  "https://vegetables-knives-locally-include.trycloudflare.com/api/auth/callback"
+  "https://colleges-jurisdiction-subscribers-than.trycloudflare.com/auth/callback",
+  "https://colleges-jurisdiction-subscribers-than.trycloudflare.com/auth/shopify/callback",
+  "https://colleges-jurisdiction-subscribers-than.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

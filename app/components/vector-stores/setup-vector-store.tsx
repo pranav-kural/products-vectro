@@ -41,7 +41,7 @@ export const SetupVectorStore = (props: SetupVectorStoreProps) => {
                   target="_blank"
                   removeUnderline
                 >
-                  Astra DB
+                  Datastax (AstraDB)
                 </Link>
               </List.Item>
               <List.Item>
@@ -50,7 +50,7 @@ export const SetupVectorStore = (props: SetupVectorStoreProps) => {
                   target="_blank"
                   removeUnderline
                 >
-                  Elasticsearch
+                  Elastcic (Elasticsearch)
                 </Link>
               </List.Item>
               <List.Item>

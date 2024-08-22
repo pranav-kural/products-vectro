@@ -103,7 +103,7 @@ async function ingestDocumentsToAstraDB(
   embeddingModel: OpenAIEmbeddings | GoogleGenerativeAIEmbeddings,
   products: Document[],
 ): Promise<void> {
-  if (vectorStoreConfig.provider === "Astra") {
+  if (vectorStoreConfig.provider === "Datastax") {
     // Astra configurations
     const astraConfig: AstraLibArgs = {
       token: vectorStoreConfig.token,
@@ -174,7 +174,7 @@ async function ingestDocumentsToVectorStore(
 ): Promise<void> {
   if (vectorStoreConfig.provider === "Pinecone") {
     ingestDocumentsToPinecone(vectorStoreConfig, embeddingModel, products);
-  } else if (vectorStoreConfig.provider === "Astra") {
+  } else if (vectorStoreConfig.provider === "Datastax") {
     ingestDocumentsToAstraDB(vectorStoreConfig, embeddingModel, products);
   } else if (vectorStoreConfig.provider === "Elasticsearch") {
     ingestDocumentsToElasticsearch(vectorStoreConfig, embeddingModel, products);

@@ -18,7 +18,7 @@ export function VectorStoreCredentialsForm(
   // Set or load initial/default value from a database if needed
   // Useful if saving configurations remotely
   const INITIAL_PROVIDER: VectorStoreProvider | undefined =
-    VectorStoreProvider.Astra;
+    VectorStoreProvider.Datastax;
 
   const [provider, setProvider] = useState<VectorStoreProvider | undefined>(
     INITIAL_PROVIDER,
@@ -51,7 +51,7 @@ export function VectorStoreCredentialsForm(
           />
         )}
 
-        {provider === VectorStoreProvider.Astra && (
+        {provider === VectorStoreProvider.Datastax && (
           <AstraConfigForm setVectorStoreConfig={props.setVectorStoreConfig} />
         )}
 

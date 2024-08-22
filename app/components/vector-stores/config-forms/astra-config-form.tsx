@@ -31,7 +31,7 @@ export function AstraConfigForm(props: AstraConfigFormProps) {
   const INITIAL_DIMENSIONS = "";
   const INITIAL_METRIC: AstraDBMetric = "cosine";
 
-  const PROVIDER: VectorStoreProvider = VectorStoreProvider.Astra;
+  const PROVIDER: VectorStoreProvider = VectorStoreProvider.Datastax;
 
   // Astra configs
   const [token, setToken] = useState(INITIAL_TOKEN);

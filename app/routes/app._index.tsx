@@ -43,8 +43,9 @@ export default function Index() {
                   <List.Item>
                     <strong>Vector Store Providers</strong>. Supports multiple
                     high-performance vector store providers like Pinecone,
-                    AstraDB, and Elasticsearch out of the box, giving you the
-                    flexibility to choose the best provider for your use case.
+                    Datastax (AstraDB), and Elastic (Elasticsearch) out of the
+                    box, giving you the flexibility to choose the best provider
+                    for your use case.
                   </List.Item>
                   <List.Item>
                     <strong>Embedding Model Providers</strong>. Supports

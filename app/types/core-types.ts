@@ -44,7 +44,7 @@ export type EmbeddingModelConfig = {
 };
 
 export enum VectorStoreProvider {
-  Astra = "Astra",
+  Datastax = "Datastax",
   Pinecone = "Pinecone",
   Elasticsearch = "Elasticsearch",
 }
@@ -59,7 +59,7 @@ export const AstraDBMetricOptions = ["cosine", "euclidean", "dot_product"];
 export type AstraDBMetric = "cosine" | "euclidean" | "dot_product";
 
 export type AstraConfig = {
-  provider: "Astra";
+  provider: "Datastax";
   token: string;
   endpoint: string;
   collection: string;
