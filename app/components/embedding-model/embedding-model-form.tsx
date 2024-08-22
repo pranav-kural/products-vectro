@@ -1,5 +1,5 @@
 import { Form, FormLayout, TextField, Button, Select } from "@shopify/polaris";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   type EmbeddingModelConfig,
   type EmbeddingModelName,
@@ -33,6 +33,27 @@ export function EmbeddingModelConfigForm(props: EmbeddingModelConfigFormProps) {
 
   const [apiKey, setApiKey] = useState(INITIAL_API_KEY);
   const [apiKeyError, setApiKeyError] = useState("");
+
+  const [enableSubmit, setEnableSubmit] = useState(false);
+
+  useMemo(() => {
+    const areRequiredFieldsFilled =
+      provider !== undefined && modelName !== undefined && apiKey !== "";
+
+    const isAnyFieldChanged =
+      provider !== INITIAL_PROVIDER ||
+      modelName !== INITIAL_MODEL_NAME ||
+      apiKey !== INITIAL_API_KEY;
+
+    setEnableSubmit(isAnyFieldChanged && areRequiredFieldsFilled);
+  }, [
+    provider,
+    modelName,
+    apiKey,
+    INITIAL_PROVIDER,
+    INITIAL_MODEL_NAME,
+    INITIAL_API_KEY,
+  ]);
 
   const getEmbeddingModelNameOptions = useCallback(() => {
     switch (provider) {
@@ -80,6 +101,12 @@ export function EmbeddingModelConfigForm(props: EmbeddingModelConfigFormProps) {
       modelName,
       apiKey,
     });
+
+    // show toast
+    shopify.toast.show("Success! Embedding model configurations saved");
+
+    // disable submit button
+    setEnableSubmit(false);
   }, [modelName, apiKey, provider, props]);
 
   return (
@@ -117,17 +144,7 @@ export function EmbeddingModelConfigForm(props: EmbeddingModelConfigFormProps) {
             helpText="The API key for accessing the embedding model."
           />
         </FormLayout.Group>
-        <Button
-          submit
-          disabled={
-            (provider === INITIAL_PROVIDER &&
-              modelName === INITIAL_MODEL_NAME &&
-              apiKey === INITIAL_API_KEY) ||
-            !provider ||
-            !modelName ||
-            !apiKey
-          }
-        >
+        <Button submit disabled={!enableSubmit}>
           Save
         </Button>
       </FormLayout>
