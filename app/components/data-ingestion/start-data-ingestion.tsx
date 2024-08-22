@@ -1,20 +1,11 @@
-import {
-  Card,
-  Layout,
-  Link,
-  List,
-  Text,
-  BlockStack,
-  Button,
-  Box,
-  InlineGrid,
-} from "@shopify/polaris";
+import { Text, Button, Box, InlineGrid, BlockStack } from "@shopify/polaris";
 import type {
   EmbeddingModelConfig,
   VectorStoreConfig,
 } from "~/types/core-types";
 import { Modal, TitleBar, useAppBridge } from "@shopify/app-bridge-react";
 import { useMemo, useState } from "react";
+import { ingestProducts } from "~/core/data-ingestion";
 
 export type StartDataIngestionProps = {
   loadProducts: () => void;
@@ -31,10 +22,29 @@ export const StartDataIngestion = (props: StartDataIngestionProps) => {
   const [dataIngestionInProgress, setDataIngestionInProgress] = useState(false);
 
   useMemo(() => {
-    if (productsData) {
-      shopify.toast.show("Products loaded successfully");
+    // if we have the products data now and dataIngestionInProgress is true (i.e. the start data ingestion button was clicked)
+    // and we have the vector store and embedding model configured (submit button is disabled otherwise)
+    // then start the data ingestion process
+    if (
+      dataIngestionInProgress &&
+      productsData &&
+      props.vectorStoreConfig &&
+      props.embeddingModelConfig
+    ) {
+      shopify.toast.show("Data ingestion started");
+      ingestProducts({
+        vectorStoreConfig: props.vectorStoreConfig,
+        embeddingModelConfig: props.embeddingModelConfig,
+        products: productsData,
+      });
     }
-  }, [productsData, shopify]);
+  }, [
+    dataIngestionInProgress,
+    productsData,
+    props.vectorStoreConfig,
+    props.embeddingModelConfig,
+    shopify,
+  ]);
 
   const startDataIngestion = async () => {
     // hide model
@@ -43,12 +53,8 @@ export const StartDataIngestion = (props: StartDataIngestionProps) => {
     setDataIngestionInProgress(true);
     // load products data from shopify
     props.loadProducts();
-    // load data into Document objects
-
-    // chunking the data into smaller parts
-    // setup vector store with embedding model
-    // add data to vector store - will generate and store embeddings
   };
+
   return (
     <>
       <Modal id={MODAL_ID} variant="base">
@@ -92,126 +98,43 @@ export const StartDataIngestion = (props: StartDataIngestionProps) => {
           </InlineGrid>
         </Box>
       </Modal>
-      <Layout>
-        <Layout.Section>
-          <Card>
-            <BlockStack gap="300">
-              <Text variant="headingXl" as="h4">
-                Start Data Ingestion
-              </Text>
-              <Text as="p" variant="bodyMd">
-                Below you can configure the vector store where you want to load
-                the products data. Select the vector store provider, and provide
-                the URL of the hosted vector store index/collection you want to
-                use, and the required credentials to access it.
-              </Text>
-              <Box>
-                <Button
-                  variant="primary"
-                  tone="success"
-                  size="large"
-                  onClick={() => shopify.modal.show(MODAL_ID)}
-                  loading={dataIngestionInProgress}
-                >
-                  Start Data Ingestion
-                </Button>
-                {dataIngestionInProgress && (
-                  <Box paddingBlockStart="400">
-                    <Text as="p" variant="bodySm" tone="subdued">
-                      Data ingestion in progress. This may take some time.
-                    </Text>
-                  </Box>
-                )}
-              </Box>
-              <Box>
-                {props.productsFetcher.data && (
-                  <Text as="p" variant="bodyMd">
-                    Product generated:{" "}
-                    {JSON.stringify(props.productsFetcher.data)}
-                  </Text>
-                )}
-              </Box>
-            </BlockStack>
-          </Card>
-        </Layout.Section>
-        <Layout.Section variant="oneThird">
-          <Card>
-            <BlockStack gap="200">
-              <Text as="h2" variant="headingMd">
-                Data Ingestion Steps
-              </Text>
-              <Text as="p" variant="bodyMd">
-                <List>
-                  <List.Item>
-                    <Text as="span" fontWeight="bold">
-                      1. Data Collection:
-                    </Text>{" "}
-                    Collected data from source and store it locally.
-                  </List.Item>
-                  <List.Item>
-                    <Text as="span" fontWeight="bold">
-                      2. Data Loading:
-                    </Text>{" "}
-                    Load file, or multiple files, into Document objects.
-                  </List.Item>
-                  <List.Item>
-                    <Text as="span" fontWeight="bold">
-                      3. Data Chunking:
-                    </Text>{" "}
-                    Chunking the data into smaller parts.
-                  </List.Item>
-                  <List.Item>
-                    <Text as="span" fontWeight="bold">
-                      4. Embedding Generation:
-                    </Text>{" "}
-                    Generate embeddings for each chunk of data.
-                  </List.Item>
-                  <List.Item>
-                    <Text as="span" fontWeight="bold">
-                      5. Storage:
-                    </Text>{" "}
-                    Store the generated vector embeddings in a vector store.
-                  </List.Item>
-                </List>
-              </Text>
-              Refer to the below links to learn more about how data is handled
-              when using a vector store or database.
-              <List>
-                <List.Item>
-                  <Link
-                    url="https://www.pinecone.io/learn/vector-embeddings/"
-                    accessibilityLabel="Article on What are Vector Embeddings"
-                    target="_blank"
-                    removeUnderline
-                  >
-                    What are Vector Embeddings
-                  </Link>
-                </List.Item>
-                <List.Item>
-                  <Link
-                    url="https://www.pinecone.io/learn/vector-similarity/"
-                    accessibilityLabel="Article on Vector Similarity Explained"
-                    target="_blank"
-                    removeUnderline
-                  >
-                    Vector Similarity Explained
-                  </Link>
-                </List.Item>
-                <List.Item>
-                  <Link
-                    url="https://www.pinecone.io/learn/vector-database"
-                    accessibilityLabel="Article on What is a Vector Database & How Does it Work?"
-                    target="_blank"
-                    removeUnderline
-                  >
-                    What is a Vector Database & How Does it Work?
-                  </Link>
-                </List.Item>
-              </List>
-            </BlockStack>
-          </Card>
-        </Layout.Section>
-      </Layout>
+      <Box>
+        <Button
+          variant="primary"
+          tone="success"
+          size="large"
+          onClick={() => shopify.modal.show(MODAL_ID)}
+          loading={dataIngestionInProgress}
+          disabled={
+            props.vectorStoreConfig === undefined ||
+            props.embeddingModelConfig === undefined
+          }
+        >
+          Start Data Ingestion
+        </Button>
+        {dataIngestionInProgress && !productsData ? (
+          <Box paddingBlockStart="400">
+            <Text as="p" variant="bodyMd">
+              Waiting for products data to be loaded...
+            </Text>
+          </Box>
+        ) : dataIngestionInProgress && productsData ? (
+          <Box paddingBlockStart="400">
+            <Text as="p" variant="bodySm" tone="subdued">
+              Data ingestion in progress. This may take some time.
+            </Text>
+          </Box>
+        ) : null}
+        {props.vectorStoreConfig === undefined ||
+        props.embeddingModelConfig === undefined ? (
+          <Box paddingBlockStart="400">
+            <Text as="p" variant="bodyMd" tone="critical">
+              Please configure the vector store and embedding model before
+              starting data ingestion.
+            </Text>
+          </Box>
+        ) : null}
+      </Box>
     </>
   );
 };
