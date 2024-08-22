@@ -24,7 +24,6 @@ export const SetupVectorStore = (props: SetupVectorStoreProps) => {
             </Text>
             <VectorStoreCredentialsForm
               setVectorStoreConfig={props.setVectorStoreConfig}
-              initialVectorStoreConfig={props.initialVectorStoreConfig}
             />
           </BlockStack>
         </Card>
@@ -38,7 +37,7 @@ export const SetupVectorStore = (props: SetupVectorStoreProps) => {
             <List>
               <List.Item>
                 <Link url="https://zilliz.com/" target="_blank" removeUnderline>
-                  Zilliz Milvus
+                  Astra DB
                 </Link>
               </List.Item>
               <List.Item>
