@@ -1,4 +1,11 @@
-import { Form, FormLayout, TextField, Button, Select } from "@shopify/polaris";
+import {
+  Form,
+  FormLayout,
+  TextField,
+  Button,
+  Select,
+  InlineGrid,
+} from "@shopify/polaris";
 import { useCallback, useMemo, useState } from "react";
 import {
   type ElasticKnnEngine,
@@ -45,16 +52,18 @@ export function ElasticsearchConfigForm(props: ElasticsearchConfigFormProps) {
   const [enableSubmit, setEnableSubmit] = useState(false);
 
   useMemo(() => {
-    // check if values have changed from initial values
-    // and that string values for required fields are not empty
-    // Elasticsearch configs
-    const isApiKeyChanged = apiKey !== INITIAL_API_KEY && apiKey !== "";
-    const isUrlChanged = url !== INITIAL_URL && url !== "";
-    const isIndexNameChanged =
-      indexName !== INITIAL_INDEX_NAME && indexName !== "";
+    // At least one of the fields have been changed
+    const isAnyFieldChanged =
+      apiKey !== INITIAL_API_KEY ||
+      indexName !== INITIAL_INDEX_NAME ||
+      url !== INITIAL_URL;
 
-    // Enable submit button if provider is valid and a required field has been changed
-    setEnableSubmit(isApiKeyChanged || isUrlChanged || isIndexNameChanged);
+    // none of the required fields are empty
+    const areRequiredFieldsFilled =
+      apiKey !== "" && indexName !== "" && url !== "";
+
+    // Enable submit button if all required fields are filled and a field has been changed
+    setEnableSubmit(isAnyFieldChanged && areRequiredFieldsFilled);
   }, [
     apiKey,
     url,
@@ -114,26 +123,28 @@ export function ElasticsearchConfigForm(props: ElasticsearchConfigFormProps) {
     <Form onSubmit={handleSubmit}>
       <FormLayout>
         <FormLayout.Group>
-          <TextField
-            value={url}
-            error={urlError}
-            type="text"
-            label="URL"
-            onChange={setUrl}
-            autoComplete="off"
-            requiredIndicator
-            helpText="URL of the Elasticsearch vector store"
-          />
-          <TextField
-            value={indexName}
-            error={indexNameError}
-            type="text"
-            label="URL"
-            onChange={setIndexName}
-            autoComplete="off"
-            requiredIndicator
-            helpText="Name of the index in the Elasticsearch vector store"
-          />
+          <InlineGrid gap="400" columns={2}>
+            <TextField
+              value={url}
+              error={urlError}
+              type="text"
+              label="URL"
+              onChange={setUrl}
+              autoComplete="off"
+              requiredIndicator
+              helpText="URL of the Elasticsearch vector store"
+            />
+            <TextField
+              value={indexName}
+              error={indexNameError}
+              type="text"
+              label="Index Name"
+              onChange={setIndexName}
+              autoComplete="off"
+              requiredIndicator
+              helpText="Name of the index in the Elasticsearch vector store"
+            />
+          </InlineGrid>
           <TextField
             value={apiKey}
             error={apiKeyError}
@@ -144,24 +155,25 @@ export function ElasticsearchConfigForm(props: ElasticsearchConfigFormProps) {
             requiredIndicator
             helpText="API key for accessing the Elasticsearch vector store"
           />
+          <InlineGrid gap="400" columns={2}>
+            <Select
+              label="KNN Engine"
+              options={ElasticKnnEngineOptions}
+              value={knnEngine}
+              onChange={handleKnnEngineSelectChange}
+              placeholder="Optional, select KNN engine"
+              helpText="KNN Engine for Elasticsearch"
+            />
 
-          <Select
-            label="KNN Engine"
-            options={ElasticKnnEngineOptions}
-            value={knnEngine}
-            onChange={handleKnnEngineSelectChange}
-            placeholder="Optional, select KNN engine"
-            helpText="KNN Engine for Elasticsearch"
-          />
-
-          <Select
-            label="Similarity Metric"
-            options={ElasticSimilarityOptions}
-            value={similarityMetric}
-            onChange={handleSimilaritySelectChange}
-            placeholder="Optional, select similarity metric"
-            helpText="Similarity metric for Elasticsearch"
-          />
+            <Select
+              label="Similarity Metric"
+              options={ElasticSimilarityOptions}
+              value={similarityMetric}
+              onChange={handleSimilaritySelectChange}
+              placeholder="Optional, select similarity metric"
+              helpText="Similarity metric for Elasticsearch"
+            />
+          </InlineGrid>
         </FormLayout.Group>
         <Button submit disabled={!enableSubmit}>
           Save

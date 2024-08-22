@@ -28,15 +28,15 @@ export function PineconeConfigForm(props: PineconeConfigFormProps) {
   const [enableSubmit, setEnableSubmit] = useState(false);
 
   useMemo(() => {
-    // check if values have changed from initial values
-    // and that string values for required fields are not empty
-    // Pinecone configs
-    const isApiKeyChanged = apiKey !== INITIAL_API_KEY && apiKey !== "";
-    const isIndexNameChanged =
-      indexName !== INITIAL_INDEX_NAME && indexName !== "";
+    // At least one of the fields have been changed
+    const isAnyFieldChanged =
+      apiKey !== INITIAL_API_KEY || indexName !== INITIAL_INDEX_NAME;
 
-    // Enable submit button if provider is valid and a required field has been changed
-    setEnableSubmit(isApiKeyChanged || isIndexNameChanged);
+    // none of the required fields are empty
+    const areRequiredFieldsFilled = apiKey !== "" && indexName !== "";
+
+    // Enable submit button if all required fields are filled and a field has been changed
+    setEnableSubmit(isAnyFieldChanged && areRequiredFieldsFilled);
   }, [apiKey, indexName, INITIAL_API_KEY, INITIAL_INDEX_NAME]);
 
   const handleSubmit = useCallback(() => {
@@ -61,6 +61,12 @@ export function PineconeConfigForm(props: PineconeConfigFormProps) {
       apiKey: apiKey,
       indexName: indexName,
     });
+
+    // show toast
+    shopify.toast.show("Success! Pinecone configurations saved");
+
+    // disable submit button
+    setEnableSubmit(false);
   }, [apiKey, indexName, props]);
 
   return (
