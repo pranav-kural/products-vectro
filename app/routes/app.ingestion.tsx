@@ -1,6 +1,7 @@
-import { BlockStack, Box, Page } from "@shopify/polaris";
+import { useFetcher } from "@remix-run/react";
+import { Page, Button, BlockStack, InlineStack } from "@shopify/polaris";
 import { TitleBar } from "@shopify/app-bridge-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import type {
   EmbeddingModelConfig,
   EmbeddingModelName,
@@ -12,51 +13,17 @@ import { SetupVectorStore } from "~/components/vector-stores/setup-vector-store"
 import { StartDataIngestion } from "~/components/data-ingestion/start-data-ingestion";
 import { HowItWorks } from "~/components/data-ingestion/how-it-works";
 import { SetupEmbeddingModel } from "~/components/embedding-model/setup-embedding-model";
-import type { ActionFunction, ActionFunctionArgs } from "@remix-run/node";
-import { authenticate } from "~/shopify.server";
-import { json } from "@remix-run/node";
-import { useFetcher } from "@remix-run/react";
+import { getProductsAction } from "~/core/shopify-api.server";
 
-const action: ActionFunction = async ({ request }: ActionFunctionArgs) => {
-  const { admin } = await authenticate.admin(request);
+export const action = getProductsAction;
 
-  const response = await admin.graphql(
-    `query {
-    products(first: 10, reverse: true) {
-      edges {
-        node {
-          id
-          title
-          handle
-          resourcePublicationOnCurrentPublication {
-            publication {
-              name
-              id
-            }
-            publishDate
-            isPublished
-          }
-        }
-      }
-    }
-  }`,
-  );
-
-  const responseJson = await response.json();
-
-  return json({
-    products: responseJson!.data!.products,
-  });
-};
-
-export default function LoadDataPage() {
+export default function Index() {
   const fetcher = useFetcher<typeof action>();
-  const [loadingProducts, setLoadingProducts] = useState(false);
+  const isLoading =
+    ["loading", "submitting"].includes(fetcher.state) &&
+    fetcher.formMethod === "POST";
 
-  useMemo(() => {
-    if (fetcher.state === "loading" || fetcher.state === "submitting")
-      setLoadingProducts(true);
-  }, [fetcher.state]);
+  const loadProducts = () => fetcher.submit({}, { method: "POST" });
 
   // pull initial data from database for the user
   const INITIAL_PROVIDER: VectorStoreProvider | undefined = undefined;
@@ -109,19 +76,18 @@ export default function LoadDataPage() {
           initialEmbeddingModelConfig={INITIAL_EMBEDDING_MODEL_CONFIG}
         />
         <StartDataIngestion
+          loadProducts={loadProducts}
+          productsFetcher={fetcher}
           vectorStoreConfig={vectorStoreConfig}
           embeddingModelConfig={embeddingModelConfig}
         />
-        {fetcher.data ? (
-          <Box>{JSON.stringify(fetcher.data)}</Box>
-        ) : (
-          <Box>No data</Box>
-        )}
-        {loadingProducts ? (
-          <Box>Loading products</Box>
-        ) : (
-          <Box>Products loaded</Box>
-        )}
+      </BlockStack>
+      <BlockStack gap="500">
+        <InlineStack gap="300">
+          <Button loading={isLoading} onClick={loadProducts}>
+            Load products
+          </Button>
+        </InlineStack>
       </BlockStack>
     </Page>
   );

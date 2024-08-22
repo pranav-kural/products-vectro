@@ -9,3 +9,5 @@
  * 1. Prepare GraphQL query to load products data from Shopify API
  * 2. Use LangChain to start data ingestion process
  */
+
+// const PRODUCTS = [];

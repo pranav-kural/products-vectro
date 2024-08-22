@@ -14,9 +14,11 @@ import type {
   VectorStoreConfig,
 } from "~/types/core-types";
 import { Modal, TitleBar, useAppBridge } from "@shopify/app-bridge-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 export type StartDataIngestionProps = {
+  loadProducts: () => void;
+  productsFetcher: any;
   vectorStoreConfig?: VectorStoreConfig;
   embeddingModelConfig?: EmbeddingModelConfig;
 };
@@ -24,8 +26,15 @@ export type StartDataIngestionProps = {
 export const StartDataIngestion = (props: StartDataIngestionProps) => {
   const shopify = useAppBridge();
   const MODAL_ID = "start-data-ingestion-modal";
+  const productsData = props.productsFetcher.data;
 
   const [dataIngestionInProgress, setDataIngestionInProgress] = useState(false);
+
+  useMemo(() => {
+    if (productsData) {
+      shopify.toast.show("Products loaded successfully");
+    }
+  }, [productsData, shopify]);
 
   const startDataIngestion = async () => {
     // hide model
@@ -33,7 +42,7 @@ export const StartDataIngestion = (props: StartDataIngestionProps) => {
     // disable start data ingestion button and show loading spinner
     setDataIngestionInProgress(true);
     // load products data from shopify
-
+    props.loadProducts();
     // load data into Document objects
 
     // chunking the data into smaller parts
@@ -112,6 +121,14 @@ export const StartDataIngestion = (props: StartDataIngestionProps) => {
                       Data ingestion in progress. This may take some time.
                     </Text>
                   </Box>
+                )}
+              </Box>
+              <Box>
+                {props.productsFetcher.data && (
+                  <Text as="p" variant="bodyMd">
+                    Product generated:{" "}
+                    {JSON.stringify(props.productsFetcher.data)}
+                  </Text>
                 )}
               </Box>
             </BlockStack>

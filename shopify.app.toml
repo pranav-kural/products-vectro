@@ -3,7 +3,7 @@
 client_id = "8b63283b1e0b7d64b7f90b2c3c324028"
 name = "products-vector-store"
 handle = "products-vector-store"
-application_url = "https://everybody-tapes-berkeley-virtually.trycloudflare.com"
+application_url = "https://collectibles-aluminium-madness-weird.trycloudflare.com"
 embedded = true
 
 [build]
@@ -13,13 +13,13 @@ include_config_on_deploy = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "write_products"
+scopes = "read_product_listings,read_products"
 
 [auth]
 redirect_urls = [
-  "https://everybody-tapes-berkeley-virtually.trycloudflare.com/auth/callback",
-  "https://everybody-tapes-berkeley-virtually.trycloudflare.com/auth/shopify/callback",
-  "https://everybody-tapes-berkeley-virtually.trycloudflare.com/api/auth/callback"
+  "https://collectibles-aluminium-madness-weird.trycloudflare.com/auth/callback",
+  "https://collectibles-aluminium-madness-weird.trycloudflare.com/auth/shopify/callback",
+  "https://collectibles-aluminium-madness-weird.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
