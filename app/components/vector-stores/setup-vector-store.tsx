@@ -36,8 +36,21 @@ export const SetupVectorStore = (props: SetupVectorStoreProps) => {
             </Text>
             <List>
               <List.Item>
-                <Link url="https://zilliz.com/" target="_blank" removeUnderline>
+                <Link
+                  url="https://www.datastax.com/products/datastax-astra"
+                  target="_blank"
+                  removeUnderline
+                >
                   Astra DB
+                </Link>
+              </List.Item>
+              <List.Item>
+                <Link
+                  url="https://www.elastic.co/elasticsearch"
+                  target="_blank"
+                  removeUnderline
+                >
+                  Elasticsearch
                 </Link>
               </List.Item>
               <List.Item>
