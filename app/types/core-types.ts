@@ -40,15 +40,27 @@ export type EmbeddingModelConfig = {
   provider: EmbeddingModelProvider;
   modelName: EmbeddingModelName;
   apiKey: string;
+  dimensions?: number;
 };
 
 export enum VectorStoreProvider {
-  Milvus = "Milvus",
+  Astra = "Astra",
   Pinecone = "Pinecone",
 }
 
-export type VectorStoreConfig = {
-  provider: VectorStoreProvider;
+export type PineconeConfig = {
+  provider: "Pinecone";
   apiKey: string;
-  url: string;
+  indexName: string;
 };
+
+export type AstraConfig = {
+  provider: "Astra";
+  token: string;
+  endpoint: string;
+  collection: string;
+  dimensions?: number;
+  metric?: "cosine" | "euclidean" | "dot_product";
+};
+
+export type VectorStoreConfig = PineconeConfig | AstraConfig;
